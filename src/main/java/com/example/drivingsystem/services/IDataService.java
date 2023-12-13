@@ -6,5 +6,5 @@ import com.example.drivingsystem.response.ResponseResult;
 public interface IDataService {
     ResponseResult postData(DataRecord dataRecord);
 
-    ResponseResult list(DataRecord dataRecord);
+    ResponseResult list(String useId);
 }

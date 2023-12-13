@@ -5,9 +5,9 @@ import com.example.drivingsystem.response.ResponseResult;
 
 public interface IFriendService {
 
-    ResponseResult bindFriend(Friend friend);
+    ResponseResult bindFriend(String username,String friendId);
 
-    ResponseResult list(Friend friend);
+    ResponseResult list(String friendId);
 
     ResponseResult updateStatus(Friend friend);
 

@@ -9,7 +9,6 @@ import java.util.List;
 public interface FriendDao extends JpaRepository<Friend,String>, JpaSpecificationExecutor<Friend> {
 
     Friend findOneByUseIdAndFriendId(String userId,String friendId);
-
     List<Friend> findAllByFriendId(String friendId);
     List<Friend> findAllByUseId(String useId);
 }

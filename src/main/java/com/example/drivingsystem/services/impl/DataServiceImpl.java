@@ -49,8 +49,7 @@ public class DataServiceImpl implements IDataService {
     }
 
     @Override
-    public ResponseResult list(DataRecord dataRecord) {
-        String useId = dataRecord.getUseId();
+    public ResponseResult list(String useId) {
         if (TextUtils.isEmpty(useId)) {
             return ResponseResult.FAILED("司机用户不能为空");
         }

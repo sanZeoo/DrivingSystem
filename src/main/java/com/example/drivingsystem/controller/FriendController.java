@@ -20,8 +20,9 @@ public class FriendController {
      * @return
      */
     @GetMapping("/bind")
-    public ResponseResult bindFriend(@RequestBody Friend friend){
-        return friendService.bindFriend(friend);
+    public ResponseResult bindFriend(@RequestParam("username")String useId,@RequestParam("friendId")String friendId){
+
+        return friendService.bindFriend(useId,friendId);
     }
 
     /**
@@ -29,12 +30,12 @@ public class FriendController {
      * @return
      */
     @GetMapping("/list")
-    public ResponseResult list(@RequestBody Friend friend){
-        return friendService.list(friend);
+    public ResponseResult list(@RequestParam("friendId")String friendId){
+        return friendService.list(friendId);
     }
 
 
-    @GetMapping("/update")
+    @PostMapping("/update")
     public ResponseResult updateStatus(@RequestBody Friend friend){
         return friendService.updateStatus(friend);
     }

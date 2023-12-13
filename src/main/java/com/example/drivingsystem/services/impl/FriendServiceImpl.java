@@ -1,7 +1,9 @@
 package com.example.drivingsystem.services.impl;
 
 import com.example.drivingsystem.dao.FriendDao;
+import com.example.drivingsystem.dao.UserDao;
 import com.example.drivingsystem.pojo.Friend;
+import com.example.drivingsystem.pojo.User;
 import com.example.drivingsystem.response.ResponseResult;
 import com.example.drivingsystem.services.IFriendService;
 import com.example.drivingsystem.utils.SnowflakeIdWorker;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 @Slf4j
@@ -25,21 +28,34 @@ public class FriendServiceImpl implements IFriendService {
 
     @Autowired
     private FriendDao friendDao;
+
+    @Autowired
+    private UserDao userDao;
     @Override
-    public ResponseResult bindFriend(Friend friend) {
+    public ResponseResult bindFriend(String useId,String friendId) {
         // 不为空
-        String useId = friend.getUseId();
-        String friendId = friend.getFriendId();
         if (TextUtils.isEmpty(useId)) {
             return ResponseResult.FAILED("请求人不能为空");
         }
         if (TextUtils.isEmpty(friendId)) {
             return ResponseResult.FAILED("接受人不能为空");
         }
-        Friend friendFormDb = friendDao.findOneByUseIdAndFriendId(useId, friendId);
-        if (friendFormDb!=null){
-            return ResponseResult.FAILED("你已发送了信息,请等待对方确认");
+        User userFormDb = userDao.findOneByUsername(friendId);
+        if (userFormDb==null){
+            return ResponseResult.FAILED("用户不存在");
         }
+        Friend friendFormDb = friendDao.findOneByUseIdAndFriendId(useId, friendId);
+        if (friendFormDb!=null ){
+            if (Objects.equals(friendFormDb.getStatus(), "0")){
+                return ResponseResult.FAILED("你已发送了信息,请等待对方确认");
+            }else {
+                return ResponseResult.FAILED("你已经是对方的好友了");
+            }
+
+        }
+        Friend friend = new Friend();
+        friend.setUseId(useId);
+        friend.setFriendId(friendId);
         // 查数据是否有好友
         friend.setId(String.valueOf(idWorker.nextId()));
         friend.setStatus("0");
@@ -49,22 +65,20 @@ public class FriendServiceImpl implements IFriendService {
 
         friendDao.save(friend);
         // 发起请求 改变状态
-        return ResponseResult.SUCCESS("正在请求绑定亲友...");
+        return ResponseResult.SUCCESS("正在请求绑定亲友...请等待对方确认");
     }
 
     /**
      * 返回 所有列表 等 客户端自己处理
      *
-     * @param friend
-     * @param type
+     * @param
      * @return
      */
     @Override
-    public ResponseResult list(Friend friend) {
+    public ResponseResult list(String friendId) {
         // 不为空
 
         // 确认人 可以 看有多少信息。 和 好友列表
-        String friendId = friend.getFriendId();
         if (TextUtils.isEmpty(friendId)) {
             return ResponseResult.FAILED("接受人不能为空");
         }
@@ -119,7 +133,7 @@ public class FriendServiceImpl implements IFriendService {
             }
         }
 
-        return ResponseResult.SUCCESS("修改成功");
+        return ResponseResult.SUCCESS("添加成功");
 
     }
 
