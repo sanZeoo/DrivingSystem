@@ -41,7 +41,7 @@ public class DataServiceImpl implements IDataService {
         DataRecord recordFormDb = dataDao.findOneByUseIdAndDateTime(useId, dateTime);
 
         if (recordFormDb !=null){
-            return ResponseResult.FAILED("数据已经插入成功");
+            return ResponseResult.SUCCESS("数据已经插入成功");
         }
         dataRecord.setId(String.valueOf(idWorker.nextId()));
         dataDao.save(dataRecord);
