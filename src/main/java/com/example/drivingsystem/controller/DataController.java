@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/data")
@@ -22,6 +24,11 @@ public class DataController {
     @PostMapping("/upload")
     public ResponseResult postData(@RequestBody DataRecord dataRecord){
         return dataService.postData(dataRecord);
+    }
+
+    @PostMapping("/upload/list")
+    public ResponseResult postDataList(@RequestBody List<DataRecord> list){
+        return dataService.postDataList(list);
     }
 
     /**
